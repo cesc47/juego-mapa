@@ -10,13 +10,13 @@
     body { font-family: Arial, sans-serif; text-align: center; margin: 0; }
     h1 { margin: 1rem; }
     #result { padding: 1rem; font-size: 1.2rem; }
-    #clue { font-style: italic; color: #555; display: inline; }
+    #clue { display: block; font-style: italic; color: #555; margin-top: 0.5rem; }
   </style>
 </head>
 <body>
   <h1>¡Adivina el destino secreto!</h1>
   <div id="map"></div>
-  <div id="result">Haz clic en el mapa para hacer tu intento. <span id="clue"></span></div>
+  <div id="result">Haz clic en el mapa para hacer tu intento.<span id="clue"></span></div>
 
   <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
   <script>
@@ -57,22 +57,25 @@
         if (!isInsideIslandBounds(userLat, userLon)) {
           const pista = pistas[pistaIndex];
           document.getElementById('result').innerHTML =
-            `Estás a <strong>${distance} km</strong> del destino secreto. Tu punto está <strong>${direction}</strong> del lugar correcto. <span id="clue">${pista}</span>`;
+            `Estás a <strong>${distance} km</strong> del destino secreto.<br>Tu punto está <strong>${direction}</strong> del lugar correcto.`;
+          document.getElementById('clue').innerText = `Pista: ${pista}`;
           pistaIndex = (pistaIndex + 1) % pistas.length;
         } else {
           adivinadaZona = true;
           document.getElementById('result').innerHTML =
-            `<strong>✨¡Has adivinado el destino! ✨</strong> Ahora tienes que acertar donde nos vamos a hospedar.`;
+            `<strong>✨¡Has adivinado el destino! ✨</strong><br>Ahora tienes que acertar donde nos vamos a hospedar.`;
+          document.getElementById('clue').innerText = "";
         }
       } else if (!acertadoDestino) {
         const finalDistance = getDistanceFromLatLonInKm(userLat, userLon, secretLat, secretLon);
-        if (finalDistance < 0.5) {
+        if (finalDistance < 0.05) {
           acertadoDestino = true;
-          document.getElementById('result').innerHTML =
-            `✅ <strong>¡Has llegado a tu destino!</strong>`;
+          document.getElementById('result').innerHTML = `✅ <strong>¡Has llegado a tu destino!</strong>`;
+          document.getElementById('clue').innerText = "";
         } else {
           document.getElementById('result').innerHTML =
-            `Aún no estás en el alojamiento exacto. Estás a <strong>${distance} km</strong>, <strong>${direction}</strong>.`;
+            `Aún no estás en el alojamiento exacto.<br>Estás a <strong>${distance} km</strong>, <strong>${direction}</strong>.`;
+          document.getElementById('clue').innerText = "";
         }
       }
     });
