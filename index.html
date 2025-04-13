@@ -10,7 +10,7 @@
     body { font-family: Arial, sans-serif; text-align: center; margin: 0; }
     h1 { margin: 1rem; }
     #result { padding: 1rem; font-size: 1.2rem; }
-    #clue { padding: 1rem; font-style: italic; color: #444; }
+    #clue { padding: 1rem; font-style: italic; color: #555; }
   </style>
 </head>
 <body>
@@ -23,13 +23,6 @@
   <script>
     const secretLat = 28.4196;
     const secretLon = -16.5464;
-
-    const tenerifeBounds = {
-      north: 28.6000,
-      south: 28.0000,
-      west: -16.9500,
-      east: -16.2000
-    };
 
     const pistas = [
       "Cruzo montes y barrancos en silencio, con mi mochila, el alma encuentro.",
@@ -47,7 +40,7 @@
     ];
     let pistaIndex = 0;
 
-    const map = L.map('map').setView([28.4196, -16.5464], 8);
+    const map = L.map('map').setView([41.3851, 2.1734], 6);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors'
@@ -57,34 +50,21 @@
       const userLat = e.latlng.lat;
       const userLon = e.latlng.lng;
 
-      if (isInTenerife(userLat, userLon)) {
-        const distance = getDistanceFromLatLonInKm(userLat, userLon, secretLat, secretLon).toFixed(2);
-        const direction = getDirection(userLat, userLon, secretLat, secretLon);
+      const distance = getDistanceFromLatLonInKm(userLat, userLon, secretLat, secretLon).toFixed(2);
+      const direction = getDirection(userLat, userLon, secretLat, secretLon);
 
-        document.getElementById('result').innerHTML = `
-          Estás a <strong>${distance} km</strong> del destino secreto.<br>
-          Tu punto está <strong>${direction}</strong> del lugar correcto.`;
+      document.getElementById('result').innerHTML =
+        `Estás a <strong>${distance} km</strong> del destino secreto.<br>
+        Tu punto está <strong>${direction}</strong> del lugar correcto.`;
 
-        document.getElementById('clue').innerHTML = '';
+      if (!isInsideIslandBounds(userLat, userLon)) {
+        const pista = pistas[pistaIndex];
+        document.getElementById('clue').innerText = pista;
+        pistaIndex = (pistaIndex + 1) % pistas.length;
       } else {
-        if (pistaIndex < pistas.length) {
-          document.getElementById('clue').innerText = pistas[pistaIndex];
-          pistaIndex++;
-        } else {
-          document.getElementById('clue').innerText = "Ya no quedan más pistas... ¡intenta hacer clic en Tenerife!";
-        }
-        document.getElementById('result').innerHTML = "Este lugar está fuera de Tenerife.";
+        document.getElementById('clue').innerText = "";
       }
     });
-
-    function isInTenerife(lat, lon) {
-      return (
-        lat >= tenerifeBounds.south &&
-        lat <= tenerifeBounds.north &&
-        lon >= tenerifeBounds.west &&
-        lon <= tenerifeBounds.east
-      );
-    }
 
     function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
       const R = 6371;
@@ -106,6 +86,11 @@
       let ns = userLat > targetLat ? "al sur" : "al norte";
       let ew = userLon > targetLon ? "al oeste" : "al este";
       return `${ns} y ${ew}`;
+    }
+
+    function isInsideIslandBounds(lat, lon) {
+      // Aprox. límites geográficos que rodean la isla
+      return lat >= 27.9 && lat <= 28.6 && lon >= -17.0 && lon <= -16.2;
     }
   </script>
 </body>
