@@ -26,18 +26,18 @@
     let acertadoDestino = false;
 
     const pistas = [
-      "Pista 1: Cruzo montes y barrancos en silencio, con mi mochila, el alma encuentro.",
-      "Pista 2: Piedras gigantes se alzan sobre el mar, una muralla natural imposible de ignorar.",
-      "Pista 3: En mi casco antiguo, el tiempo se detiene, calles empedradas y historia que entretiene.",
-      "Pista 4: Arena dorada traída de lejos, una playa tranquila entre reflejos.",
-      "Pista 5: En los charcos me baño sin piscina, la marea me llena y me ilumina.",
-      "Pista 6: En un teleférico subes al cielo, y desde allí ves el mundo en paralelo.",
-      "Pista 7: No soy restaurante elegante, pero aquí se come como en casa, con vino del norte y comida que abraza.",
-      "Pista 8: Soy alto, majestuoso y de lava vestido, si me visitas, estarás en lo más alto de lo conocido.",
-      "Pista 9: Amarillo por fuera, sabroso por dentro, el más querido entre los del centro.",
-      "Pista 10: Soy pequeña, redonda y arrugada sin estar vieja, me baño en mojo y soy la reina de la mesa.",
-      "Pista 11: Negra como el volcán, cálida y serena, me tumban al sol en cualquier playa buena.",
-      "Pista 12: Me tomo en vaso pequeño, con leche, licor y un toque divino, dulce, en capas, espumoso y fino."
+      "Pista 1: 🥾🌄 Cruzo montes y barrancos en silencio, con mi mochila, el alma encuentro.",
+      "Pista 2: 🪨🌊 Piedras gigantes se alzan sobre el mar, una muralla natural imposible de ignorar.",
+      "Pista 3: 🏘️🕰️ En mi casco antiguo, el tiempo se detiene, calles empedradas y historia que entretiene.",
+      "Pista 4: 🏖️✨ Arena dorada traída de lejos, una playa tranquila entre reflejos.",
+      "Pista 5: 🌊🌈 En los charcos me baño sin piscina, la marea me llena y me ilumina.",
+      "Pista 6: 🚡🌤️ En un teleférico subes al cielo, y desde allí ves el mundo en paralelo.",
+      "Pista 7: 🍷🍲 No soy restaurante elegante, pero aquí se come como en casa, con vino del norte y comida que abraza.",
+      "Pista 8: 🌋🔭 Soy alto, majestuoso y de lava vestido, si me visitas, estarás en lo más alto de lo conocido.",
+      "Pista 9: 🌞🟡 Amarillo por fuera, sabroso por dentro, el más querido entre los del centro.",
+      "Pista 10:🧂🎉 Soy pequeña, redonda y arrugada sin estar vieja, me baño en mojo y soy la reina de la mesa.",
+      "Pista 11: ⚫⛱️ Negra como el volcán, cálida y serena, me tumban al sol en cualquier playa buena.",
+      "Pista 12: ☕✨ Me tomo en vaso pequeño, con leche, licor y un toque divino, dulce, en capas, espumoso y fino."
     ];
     let pistaIndex = 0;
 
@@ -66,7 +66,7 @@
         }
       } else if (!acertadoDestino) {
         const finalDistance = getDistanceFromLatLonInKm(userLat, userLon, secretLat, secretLon);
-        if (finalDistance < 0.5) {
+        if (finalDistance < 0.05) {
           acertadoDestino = true;
           document.getElementById('result').innerHTML =
             `✅ <strong>¡Has llegado a tu destino!</strong>`;
