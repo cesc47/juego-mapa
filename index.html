@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>¿Dónde está el destino secreto?</title>
+  <title>¡Adivina el destino secreto!</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
   <style>
@@ -23,7 +23,8 @@
     const secretLat = 28.4196;
     const secretLon = -16.5464;
 
-    const map = L.map('map').setView([28.3, -16.6], 9);
+    // Mostrar Barcelona al inicio
+    const map = L.map('map').setView([41.3851, 2.1734], 6);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors'
