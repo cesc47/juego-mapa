@@ -10,21 +10,44 @@
     body { font-family: Arial, sans-serif; text-align: center; margin: 0; }
     h1 { margin: 1rem; }
     #result { padding: 1rem; font-size: 1.2rem; }
+    #clue { padding: 1rem; font-style: italic; color: #444; }
   </style>
 </head>
 <body>
   <h1>¡Adivina el destino secreto!</h1>
   <div id="map"></div>
   <div id="result">Haz clic en el mapa para hacer tu intento.</div>
+  <div id="clue"></div>
 
   <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
   <script>
-    // Coordenadas del destino secreto
     const secretLat = 28.4196;
     const secretLon = -16.5464;
 
-    // Mostrar Barcelona al inicio
-    const map = L.map('map').setView([41.3851, 2.1734], 6);
+    const tenerifeBounds = {
+      north: 28.6000,
+      south: 28.0000,
+      west: -16.9500,
+      east: -16.2000
+    };
+
+    const pistas = [
+      "Cruzo montes y barrancos en silencio, con mi mochila, el alma encuentro.",
+      "Piedras gigantes se alzan sobre el mar, una muralla natural imposible de ignorar.",
+      "En mi casco antiguo, el tiempo se detiene, calles empedradas y historia que entretiene.",
+      "Arena dorada traída de lejos, una playa tranquila entre reflejos.",
+      "En los charcos me baño sin piscina, la marea me llena y me ilumina.",
+      "En un teleférico subes al cielo, y desde allí ves el mundo en paralelo.",
+      "No soy restaurante elegante, pero aquí se come como en casa, con vino del norte y comida que abraza.",
+      "Soy alto, majestuoso y de lava vestido, si me visitas, estarás en lo más alto de lo conocido.",
+      "Amarillo por fuera, sabroso por dentro, el más querido entre los del centro.",
+      "Soy pequeña, redonda y arrugada sin estar vieja, me baño en mojo y soy la reina de la mesa.",
+      "Negra como el volcán, cálida y serena, me tumban al sol en cualquier playa buena.",
+      "Me tomo en vaso pequeño, con leche, licor y un toque divino, dulce, en capas, espumoso y fino."
+    ];
+    let pistaIndex = 0;
+
+    const map = L.map('map').setView([28.4196, -16.5464], 8);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors'
@@ -34,16 +57,38 @@
       const userLat = e.latlng.lat;
       const userLon = e.latlng.lng;
 
-      const distance = getDistanceFromLatLonInKm(userLat, userLon, secretLat, secretLon).toFixed(2);
-      const direction = getDirection(userLat, userLon, secretLat, secretLon);
+      if (isInTenerife(userLat, userLon)) {
+        const distance = getDistanceFromLatLonInKm(userLat, userLon, secretLat, secretLon).toFixed(2);
+        const direction = getDirection(userLat, userLon, secretLat, secretLon);
 
-      document.getElementById('result').innerHTML = `
-        Estás a <strong>${distance} km</strong> del destino secreto.<br>
-        Tu punto está <strong>${direction}</strong> del lugar correcto.`;
+        document.getElementById('result').innerHTML = `
+          ¡Has adivinado el destino! Ahora tienes que adivinar dónde nos hospedaremos.<br>
+          Estás a <strong>${distance} km</strong> del destino secreto.<br>
+          Tu punto está <strong>${direction}</strong> del lugar correcto.`;
+
+        document.getElementById('clue').innerHTML = '';
+      } else {
+        if (pistaIndex < pistas.length) {
+          document.getElementById('clue').innerText = pistas[pistaIndex];
+          pistaIndex++;
+        } else {
+          document.getElementById('clue').innerText = "Ya no quedan más pistas... ¡intenta hacer clic en Tenerife!";
+        }
+        document.getElementById('result').innerHTML = "Este lugar está fuera de Tenerife.";
+      }
     });
 
+    function isInTenerife(lat, lon) {
+      return (
+        lat >= tenerifeBounds.south &&
+        lat <= tenerifeBounds.north &&
+        lon >= tenerifeBounds.west &&
+        lon <= tenerifeBounds.east
+      );
+    }
+
     function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
-      const R = 6371; // km
+      const R = 6371;
       const dLat = deg2rad(lat2 - lat1);
       const dLon = deg2rad(lon2 - lon1);
       const a =
