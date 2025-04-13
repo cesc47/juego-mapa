@@ -10,19 +10,20 @@
     body { font-family: Arial, sans-serif; text-align: center; margin: 0; }
     h1 { margin: 1rem; }
     #result { padding: 1rem; font-size: 1.2rem; }
-    #clue { padding: 1rem; font-style: italic; color: #555; }
+    #clue { font-style: italic; color: #555; display: inline; }
   </style>
 </head>
 <body>
   <h1>¡Adivina el destino secreto!</h1>
   <div id="map"></div>
-  <div id="result">Haz clic en el mapa para hacer tu intento.</div>
-  <div id="clue"></div>
+  <div id="result">Haz clic en el mapa para hacer tu intento. <span id="clue"></span></div>
 
   <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
   <script>
     const secretLat = 28.4196;
     const secretLon = -16.5464;
+    let adivinadaZona = false;
+    let acertadoDestino = false;
 
     const pistas = [
       "Cruzo montes y barrancos en silencio, con mi mochila, el alma encuentro.",
@@ -49,20 +50,30 @@
     map.on('click', function(e) {
       const userLat = e.latlng.lat;
       const userLon = e.latlng.lng;
-
       const distance = getDistanceFromLatLonInKm(userLat, userLon, secretLat, secretLon).toFixed(2);
       const direction = getDirection(userLat, userLon, secretLat, secretLon);
 
-      document.getElementById('result').innerHTML =
-        `Estás a <strong>${distance} km</strong> del destino secreto.<br>
-        Tu punto está <strong>${direction}</strong> del lugar correcto.`;
-
-      if (!isInsideIslandBounds(userLat, userLon)) {
-        const pista = pistas[pistaIndex];
-        document.getElementById('clue').innerText = pista;
-        pistaIndex = (pistaIndex + 1) % pistas.length;
-      } else {
-        document.getElementById('clue').innerText = "";
+      if (!adivinadaZona) {
+        if (!isInsideIslandBounds(userLat, userLon)) {
+          const pista = pistas[pistaIndex];
+          document.getElementById('result').innerHTML =
+            `Estás a <strong>${distance} km</strong> del destino secreto. Tu punto está <strong>${direction}</strong> del lugar correcto. <span id="clue">${pista}</span>`;
+          pistaIndex = (pistaIndex + 1) % pistas.length;
+        } else {
+          adivinadaZona = true;
+          document.getElementById('result').innerHTML =
+            `<strong>✨¡Has adivinado el destino! ✨</strong> Ahora tienes que acertar donde nos vamos a hospedar.`;
+        }
+      } else if (!acertadoDestino) {
+        const finalDistance = getDistanceFromLatLonInKm(userLat, userLon, secretLat, secretLon);
+        if (finalDistance < 0.5) {
+          acertadoDestino = true;
+          document.getElementById('result').innerHTML =
+            `✅ <strong>¡Has llegado a tu destino!</strong>`;
+        } else {
+          document.getElementById('result').innerHTML =
+            `Aún no estás en el alojamiento exacto. Estás a <strong>${distance} km</strong>, <strong>${direction}</strong>.`;
+        }
       }
     });
 
@@ -89,7 +100,6 @@
     }
 
     function isInsideIslandBounds(lat, lon) {
-      // Aprox. límites geográficos que rodean la isla
       return lat >= 27.9 && lat <= 28.6 && lon >= -17.0 && lon <= -16.2;
     }
   </script>
