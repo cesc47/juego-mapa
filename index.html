@@ -16,7 +16,8 @@
 <body>
   <h1>¡Adivina el destino secreto!</h1>
   <div id="map"></div>
-  <div id="result">Haz clic en el mapa para hacer tu intento.<span id="clue"></span></div>
+  <div id="result">Haz clic en el mapa para hacer tu intento.</div>
+  <div id="clue"></div>
 
   <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
   <script>
@@ -68,7 +69,7 @@
         }
       } else if (!acertadoDestino) {
         const finalDistance = getDistanceFromLatLonInKm(userLat, userLon, secretLat, secretLon);
-        if (finalDistance < 0.05) {
+        if (finalDistance < 0.01) {
           acertadoDestino = true;
           document.getElementById('result').innerHTML = `✅ <strong>¡Has llegado a tu destino!</strong>`;
           document.getElementById('clue').innerText = "";
